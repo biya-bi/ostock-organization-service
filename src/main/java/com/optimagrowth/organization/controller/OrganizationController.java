@@ -23,7 +23,7 @@ import com.optimagrowth.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping(value = "v1/organization")
+@RequestMapping("/v1/organization")
 @Slf4j
 class OrganizationController {
 
