@@ -3,7 +3,6 @@ package com.optimagrowth.organization.controller;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.util.Locale;
 import java.util.Objects;
 
 import org.springframework.http.ResponseEntity;
@@ -13,14 +12,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.optimagrowth.organization.exception.NotFoundException;
 import com.optimagrowth.organization.model.Organization;
-import com.optimagrowth.organization.service.MessageService;
 import com.optimagrowth.organization.service.OrganizationService;
+import com.optimagrowth.service.MessageService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,67 +42,60 @@ class OrganizationController {
     }
 
     @GetMapping("/{organizationId}")
-    ResponseEntity<Organization> findById(@PathVariable("organizationId") String organizationId,
-            @RequestHeader(value = "Accept-Language", required = false) Locale locale) {
+    ResponseEntity<Organization> findById(@PathVariable("organizationId") String organizationId) {
         Organization organization = organizationService.findById(organizationId);
 
         if (organization == null) {
-            throw new NotFoundException(messageService.getMessage(ORGANIZATION_NOT_FOUND, locale, organizationId));
+            throw new NotFoundException(messageService.getMessage(ORGANIZATION_NOT_FOUND, organizationId));
         }
 
-        return ResponseEntity.ok(addLinks(organization, locale));
+        return ResponseEntity.ok(addLinks(organization));
     }
 
     @PostMapping
-    ResponseEntity<Organization> create(@RequestBody Organization organization,
-            @RequestHeader(value = "Accept-Language", required = false) Locale locale) {
-        Objects.requireNonNull(organization,
-                messageService.getMessage(ORGANIZATION_CANNOT_BE_NULL, locale, organization));
+    ResponseEntity<Organization> create(@RequestBody Organization organization) {
+        Objects.requireNonNull(organization, messageService.getMessage(ORGANIZATION_CANNOT_BE_NULL));
 
         var newOrganization = organizationService.create(organization);
 
-        log.info(messageService.getMessage(ORGANIZATION_CREATE_MESSAGE, locale, newOrganization));
+        log.info(messageService.getMessage(ORGANIZATION_CREATE_MESSAGE, newOrganization));
 
-        return ResponseEntity.ok(addLinks(newOrganization, locale));
+        return ResponseEntity.ok(addLinks(newOrganization));
     }
 
     @PutMapping("/{organizationId}")
     ResponseEntity<Organization> update(@PathVariable("organizationId") String organizationId,
-            @RequestBody Organization organization,
-            @RequestHeader(value = "Accept-Language", required = false) Locale locale) {
-        Objects.requireNonNull(organization,
-                messageService.getMessage(ORGANIZATION_CANNOT_BE_NULL, locale, organization));
+            @RequestBody Organization organization) {
+        Objects.requireNonNull(organization, messageService.getMessage(ORGANIZATION_CANNOT_BE_NULL));
 
         var updatedOrganization = organizationService.update(organization);
 
-        log.info(messageService.getMessage(ORGANIZATION_UPDATE_MESSAGE, locale, updatedOrganization));
+        log.info(messageService.getMessage(ORGANIZATION_UPDATE_MESSAGE, updatedOrganization));
 
-        return ResponseEntity.ok(addLinks(updatedOrganization, locale));
+        return ResponseEntity.ok(addLinks(updatedOrganization));
     }
 
     @DeleteMapping("/{organizationId}")
-    ResponseEntity<Void> delete(@PathVariable("organizationId") String organizationId,
-            @RequestHeader(value = "Accept-Language", required = false) Locale locale) {
+    ResponseEntity<Void> delete(@PathVariable("organizationId") String organizationId) {
         var organization = organizationService.findById(organizationId);
 
         if (organization == null) {
-            throw new NotFoundException(
-                    messageService.getMessage(ORGANIZATION_NOT_FOUND, locale, organizationId, organizationId));
+            throw new NotFoundException(messageService.getMessage(ORGANIZATION_NOT_FOUND, organizationId));
         }
 
         organizationService.delete(organization);
 
-        log.info(messageService.getMessage(ORGANIZATION_DELETE_MESSAGE, locale, organizationId, organizationId));
+        log.info(messageService.getMessage(ORGANIZATION_DELETE_MESSAGE, organizationId));
 
         return ResponseEntity.ok(null);
     }
 
-    private Organization addLinks(Organization organization, Locale locale) {
+    private Organization addLinks(Organization organization) {
         var methodOn = methodOn(OrganizationController.class);
         var organizationId = organization.getId();
-        return organization.add(linkTo(methodOn.findById(organizationId, locale)).withSelfRel(),
-                linkTo(methodOn.update(organizationId, organization, locale)).withRel("update"),
-                linkTo(methodOn.delete(organizationId, locale)).withRel("delete"));
+        return organization.add(linkTo(methodOn.findById(organizationId)).withSelfRel(),
+                linkTo(methodOn.update(organizationId, organization)).withRel("update"),
+                linkTo(methodOn.delete(organizationId)).withRel("delete"));
     }
 
 }
