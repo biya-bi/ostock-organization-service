@@ -44,9 +44,20 @@ class OrganizationController {
         this.messageService = messageService;
     }
 
+    @PostMapping
+    ResponseEntity<Organization> create(@RequestBody Organization organization) {
+        Objects.requireNonNull(organization, messageService.getMessage(ORGANIZATION_CANNOT_BE_NULL));
+
+        var newOrganization = organizationService.create(organization);
+
+        log.info(messageService.getMessage(ORGANIZATION_CREATE_MESSAGE, newOrganization));
+
+        return ResponseEntity.ok(addLinks(newOrganization));
+    }
+
     @GetMapping("/{organizationId}")
-    ResponseEntity<Organization> findById(@PathVariable("organizationId") String organizationId) {
-        Organization organization = organizationService.findById(organizationId);
+    ResponseEntity<Organization> readById(@PathVariable("organizationId") String organizationId) {
+        var organization = organizationService.readById(organizationId);
 
         if (organization == null) {
             throw new NotFoundException(messageService.getMessage(ORGANIZATION_NOT_FOUND, organizationId));
@@ -63,17 +74,6 @@ class OrganizationController {
         return ResponseEntity.ok(organizations);
     }
 
-    @PostMapping
-    ResponseEntity<Organization> create(@RequestBody Organization organization) {
-        Objects.requireNonNull(organization, messageService.getMessage(ORGANIZATION_CANNOT_BE_NULL));
-
-        var newOrganization = organizationService.create(organization);
-
-        log.info(messageService.getMessage(ORGANIZATION_CREATE_MESSAGE, newOrganization));
-
-        return ResponseEntity.ok(addLinks(newOrganization));
-    }
-
     @PutMapping("/{organizationId}")
     ResponseEntity<Organization> update(@PathVariable("organizationId") String organizationId,
             @RequestBody Organization organization) {
@@ -88,7 +88,7 @@ class OrganizationController {
 
     @DeleteMapping("/{organizationId}")
     ResponseEntity<Void> delete(@PathVariable("organizationId") String organizationId) {
-        var organization = organizationService.findById(organizationId);
+        var organization = organizationService.readById(organizationId);
 
         if (organization == null) {
             throw new NotFoundException(messageService.getMessage(ORGANIZATION_NOT_FOUND, organizationId));
@@ -104,7 +104,7 @@ class OrganizationController {
     private Organization addLinks(Organization organization) {
         var methodOn = methodOn(OrganizationController.class);
         var organizationId = organization.getId();
-        return organization.add(linkTo(methodOn.findById(organizationId)).withSelfRel(),
+        return organization.add(linkTo(methodOn.readById(organizationId)).withSelfRel(),
                 linkTo(methodOn.update(organizationId, organization)).withRel("update"),
                 linkTo(methodOn.delete(organizationId)).withRel("delete"));
     }
