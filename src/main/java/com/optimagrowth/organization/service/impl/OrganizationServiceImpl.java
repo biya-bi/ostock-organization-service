@@ -23,6 +23,11 @@ class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
+    public Iterable<Organization> readAll() {
+        return organizationRepository.findAll();
+    }
+
+    @Override
     public Organization create(Organization organization) {
         organization.setId(UUID.randomUUID().toString());
 
@@ -30,7 +35,7 @@ class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public Organization update(Organization organization) {     
+    public Organization update(Organization organization) {
         return organizationRepository.save(organization);
     }
 
@@ -38,4 +43,5 @@ class OrganizationServiceImpl implements OrganizationService {
     public void delete(Organization organization) {
         organizationRepository.deleteById(organization.getId());
     }
+
 }
