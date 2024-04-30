@@ -4,10 +4,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.Objects;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,12 +66,13 @@ class OrganizationController {
         return ResponseEntity.ok(addLinks(organization));
     }
 
+
     @GetMapping
-    ResponseEntity<Iterable<Organization>> read() {
+    ResponseEntity<CollectionModel<Organization>> read() {
         var organizations = StreamSupport.stream(organizationService.readAll().spliterator(), false).map(this::addLinks)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(organizations);
+        return ResponseEntity.ok(CollectionModel.of(organizations));
     }
 
     @PutMapping("/{organizationId}")
