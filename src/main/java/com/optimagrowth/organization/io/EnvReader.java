@@ -8,9 +8,9 @@ public final class EnvReader {
 
     // Fields made package-private for unit testing
     static final String SPRING_SECURITY_OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI_PROP = "spring.security.oauth2.resourceserver.jwt.issuerUri";
-    static final String SPRING_DATASOURCE_URL_PROP = "spring.datasourcer.url";
-    static final String SPRING_DATASOURCE_USERNAME_PROP = "spring.datasourcer.username";
-    static final String SPRING_DATASOURCE_PASSWORD_PROP = "spring.datasourcer.password";
+    static final String SPRING_DATASOURCE_URL_PROP = "spring.datasource.url";
+    static final String SPRING_DATASOURCE_USERNAME_PROP = "spring.datasource.username";
+    static final String SPRING_DATASOURCE_PASSWORD_PROP = "spring.datasource.password";
 
     static final String JWT_ISSUER_URI_FILE = "JWT_ISSUER_URI_FILE";
     static final String DATASOURCE_URL_FILE = "DATASOURCE_URL_FILE";
