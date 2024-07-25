@@ -13,9 +13,9 @@ public final class EnvReader {
     static final String SPRING_DATASOURCE_PASSWORD_PROP = "spring.datasourcer.password";
 
     static final String JWT_ISSUER_URI_FILE = "JWT_ISSUER_URI_FILE";
-    static final String SPRING_DATASOURCE_URL_FILE = "SPRING_DATASOURCE_URL_FILE";
-    static final String SPRING_DATASOURCE_USERNAME_FILE = "SPRING_DATASOURCE_USERNAME_FILE";
-    static final String SPRING_DATASOURCE_PASSWORD_FILE = "SPRING_DATASOURCE_PASSWORD_FILE";
+    static final String DATASOURCE_URL_FILE = "DATASOURCE_URL_FILE";
+    static final String DATASOURCE_USERNAME_FILE = "DATASOURCE_USERNAME_FILE";
+    static final String DATASOURCE_PASSWORD_FILE = "DATASOURCE_PASSWORD_FILE";
 
     private EnvReader() {
     }
@@ -23,9 +23,9 @@ public final class EnvReader {
     public static void read() throws IOException {
         System.setProperty(SPRING_SECURITY_OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI_PROP,
                 EnvFileReader.read(JWT_ISSUER_URI_FILE));
-        System.setProperty(SPRING_DATASOURCE_URL_PROP, EnvFileReader.read(SPRING_DATASOURCE_URL_FILE));
-        System.setProperty(SPRING_DATASOURCE_USERNAME_PROP, EnvFileReader.read(SPRING_DATASOURCE_USERNAME_FILE));
-        System.setProperty(SPRING_DATASOURCE_PASSWORD_PROP, EnvFileReader.read(SPRING_DATASOURCE_PASSWORD_FILE));
+        System.setProperty(SPRING_DATASOURCE_URL_PROP, EnvFileReader.read(DATASOURCE_URL_FILE));
+        System.setProperty(SPRING_DATASOURCE_USERNAME_PROP, EnvFileReader.read(DATASOURCE_USERNAME_FILE));
+        System.setProperty(SPRING_DATASOURCE_PASSWORD_PROP, EnvFileReader.read(DATASOURCE_PASSWORD_FILE));
     }
 
 }

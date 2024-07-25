@@ -1,11 +1,11 @@
 package com.optimagrowth.organization.io;
 
 import static com.optimagrowth.organization.io.EnvReader.JWT_ISSUER_URI_FILE;
-import static com.optimagrowth.organization.io.EnvReader.SPRING_DATASOURCE_PASSWORD_FILE;
+import static com.optimagrowth.organization.io.EnvReader.DATASOURCE_PASSWORD_FILE;
 import static com.optimagrowth.organization.io.EnvReader.SPRING_DATASOURCE_PASSWORD_PROP;
-import static com.optimagrowth.organization.io.EnvReader.SPRING_DATASOURCE_URL_FILE;
+import static com.optimagrowth.organization.io.EnvReader.DATASOURCE_URL_FILE;
 import static com.optimagrowth.organization.io.EnvReader.SPRING_DATASOURCE_URL_PROP;
-import static com.optimagrowth.organization.io.EnvReader.SPRING_DATASOURCE_USERNAME_FILE;
+import static com.optimagrowth.organization.io.EnvReader.DATASOURCE_USERNAME_FILE;
 import static com.optimagrowth.organization.io.EnvReader.SPRING_DATASOURCE_USERNAME_PROP;
 import static com.optimagrowth.organization.io.EnvReader.SPRING_SECURITY_OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI_PROP;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,11 +28,11 @@ class EnvReaderTest {
 
         try (var envFileReaderMockedStatic = mockStatic(EnvFileReader.class)) {
             envFileReaderMockedStatic.when(() -> EnvFileReader.read(JWT_ISSUER_URI_FILE)).thenReturn(jwtIssuerUri);
-            envFileReaderMockedStatic.when(() -> EnvFileReader.read(SPRING_DATASOURCE_URL_FILE))
+            envFileReaderMockedStatic.when(() -> EnvFileReader.read(DATASOURCE_URL_FILE))
                     .thenReturn(dataSourceUrl);
-            envFileReaderMockedStatic.when(() -> EnvFileReader.read(SPRING_DATASOURCE_USERNAME_FILE))
+            envFileReaderMockedStatic.when(() -> EnvFileReader.read(DATASOURCE_USERNAME_FILE))
                     .thenReturn(dataSourceUserName);
-            envFileReaderMockedStatic.when(() -> EnvFileReader.read(SPRING_DATASOURCE_PASSWORD_FILE))
+            envFileReaderMockedStatic.when(() -> EnvFileReader.read(DATASOURCE_PASSWORD_FILE))
                     .thenReturn(dataSourcePassword);
 
             EnvReader.read();
