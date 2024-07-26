@@ -2,8 +2,8 @@
 
 FROM eclipse-temurin:17-jre-jammy
 
-WORKDIR /opt/app
+WORKDIR /opt/ostock
 
 COPY target/*.jar ./organization-service.jar
 
-ENTRYPOINT java -jar /opt/app/organization-service.jar
+ENTRYPOINT java -jar ./organization-service.jar
