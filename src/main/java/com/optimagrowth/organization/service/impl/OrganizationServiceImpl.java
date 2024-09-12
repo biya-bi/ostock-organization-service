@@ -19,13 +19,13 @@ class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Organization create(Organization organization) {
-        organization.setId(UUID.randomUUID().toString());
+        organization.setId(UUID.randomUUID());
 
         return organizationRepository.save(organization);
     }
 
     @Override
-    public Organization readById(String organizationId) {
+    public Organization readById(UUID organizationId) {
         return organizationRepository.findById(organizationId).orElse(null);
     }
 

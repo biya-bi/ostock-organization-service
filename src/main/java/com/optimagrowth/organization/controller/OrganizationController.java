@@ -4,6 +4,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -56,7 +57,7 @@ class OrganizationController {
     }
 
     @GetMapping("/{organizationId}")
-    ResponseEntity<Organization> readById(@PathVariable("organizationId") String organizationId) {
+    ResponseEntity<Organization> readById(@PathVariable("organizationId") UUID organizationId) {
         var organization = organizationService.readById(organizationId);
 
         if (organization == null) {
@@ -76,7 +77,7 @@ class OrganizationController {
     }
 
     @PutMapping("/{organizationId}")
-    ResponseEntity<Organization> update(@PathVariable("organizationId") String organizationId,
+    ResponseEntity<Organization> update(@PathVariable("organizationId") UUID organizationId,
             @RequestBody Organization organization) {
         Objects.requireNonNull(organization, messageService.getMessage(ORGANIZATION_CANNOT_BE_NULL));
 
@@ -88,7 +89,7 @@ class OrganizationController {
     }
 
     @DeleteMapping("/{organizationId}")
-    ResponseEntity<Void> delete(@PathVariable("organizationId") String organizationId) {
+    ResponseEntity<Void> delete(@PathVariable("organizationId") UUID organizationId) {
         var organization = organizationService.readById(organizationId);
 
         if (organization == null) {

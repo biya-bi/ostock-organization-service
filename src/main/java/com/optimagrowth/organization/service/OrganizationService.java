@@ -1,11 +1,13 @@
 package com.optimagrowth.organization.service;
 
+import java.util.UUID;
+
 import com.optimagrowth.organization.model.Organization;
 
 public interface OrganizationService {
     Organization create(Organization organization);
     
-    Organization readById(String organizationId);
+    Organization readById(UUID organizationId);
 
     Iterable<Organization> readAll();
 

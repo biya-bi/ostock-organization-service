@@ -1,5 +1,7 @@
 package com.optimagrowth.organization.model;
 
+import java.util.UUID;
+
 import org.springframework.hateoas.RepresentationModel;
 
 import jakarta.persistence.Column;
@@ -16,7 +18,7 @@ import lombok.ToString;
 public class Organization extends RepresentationModel<Organization> {
     @Id
     @Column(name = "organization_id", nullable = false)
-    private String id;
+    private UUID id;
 
     @Column(name = "name", nullable = false)
     private String name;

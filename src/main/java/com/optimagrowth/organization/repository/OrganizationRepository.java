@@ -1,5 +1,7 @@
 package com.optimagrowth.organization.repository;
 
+import java.util.UUID;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,5 +11,5 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @Repository
 @CircuitBreaker(name = "organizationRepository")
-public interface OrganizationRepository extends CrudRepository<Organization, String> {
+public interface OrganizationRepository extends CrudRepository<Organization, UUID> {
 }
