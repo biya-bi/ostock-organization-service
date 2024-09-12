@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.optimagrowth.organization.exception.NotFoundException;
 import com.optimagrowth.organization.model.Organization;
 import com.optimagrowth.organization.service.OrganizationService;
+import com.optimagrowth.organization.service.client.LicenseFeignClient;
 import com.optimagrowth.service.MessageService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -38,10 +39,13 @@ class OrganizationController {
     private static final String ORGANIZATION_NOT_FOUND = "organization.not.found";
 
     private final OrganizationService organizationService;
+    private final LicenseFeignClient licenseFeignClient;
     private final MessageService messageService;
 
-    OrganizationController(OrganizationService organizationService, MessageService messageService) {
+    OrganizationController(OrganizationService organizationService, LicenseFeignClient licenseFeignClient,
+            MessageService messageService) {
         this.organizationService = organizationService;
+        this.licenseFeignClient = licenseFeignClient;
         this.messageService = messageService;
     }
 
@@ -66,7 +70,6 @@ class OrganizationController {
 
         return ResponseEntity.ok(addLinks(organization));
     }
-
 
     @GetMapping
     ResponseEntity<CollectionModel<Organization>> read() {
@@ -105,10 +108,12 @@ class OrganizationController {
 
     private Organization addLinks(Organization organization) {
         var organizationController = methodOn(OrganizationController.class);
+        var licenseFeignClient = methodOn(LicenseFeignClient.class);
         var organizationId = organization.getId();
         return organization.add(linkTo(organizationController.readById(organizationId)).withSelfRel(),
                 linkTo(organizationController.update(organizationId, organization)).withRel("update"),
-                linkTo(organizationController.delete(organizationId)).withRel("delete"));
+                linkTo(organizationController.delete(organizationId)).withRel("delete"),
+                linkTo(licenseFeignClient.getLicenses(organizationId)).withRel("licenses"));
     }
 
 }
