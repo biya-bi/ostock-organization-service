@@ -13,7 +13,7 @@ import com.optimagrowth.organization.model.License;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 
-@FeignClient("licensing-service")
+@FeignClient("license-service")
 @CircuitBreaker(name = "licenseFeignClient")
 @Retry(name = "licenseFeignClient")
 public interface LicenseFeignClient {
