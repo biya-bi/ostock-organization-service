@@ -103,11 +103,11 @@ class OrganizationController {
     }
 
     private Organization addLinks(Organization organization) {
-        var methodOn = methodOn(OrganizationController.class);
+        var organizationController = methodOn(OrganizationController.class);
         var organizationId = organization.getId();
-        return organization.add(linkTo(methodOn.readById(organizationId)).withSelfRel(),
-                linkTo(methodOn.update(organizationId, organization)).withRel("update"),
-                linkTo(methodOn.delete(organizationId)).withRel("delete"));
+        return organization.add(linkTo(organizationController.readById(organizationId)).withSelfRel(),
+                linkTo(organizationController.update(organizationId, organization)).withRel("update"),
+                linkTo(organizationController.delete(organizationId)).withRel("delete"));
     }
 
 }
