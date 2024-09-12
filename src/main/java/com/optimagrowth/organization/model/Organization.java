@@ -17,7 +17,7 @@ import lombok.ToString;
 @Table(name = "organizations")
 public class Organization extends RepresentationModel<Organization> {
     @Id
-    @Column(name = "organization_id", nullable = false)
+    @Column(nullable = false)
     private UUID id;
 
     @Column(name = "name", nullable = false)
