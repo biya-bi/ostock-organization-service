@@ -14,7 +14,7 @@ import lombok.ToString;
 @Data
 @ToString
 @Entity
-@Table(name = "organizations")
+@Table(name = "organization")
 public class Organization extends RepresentationModel<Organization> {
     @Id
     @Column(nullable = false)
