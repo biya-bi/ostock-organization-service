@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.optimagrowth.organization.model.License;
+import com.optimagrowth.dto.LicenseDto;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
@@ -18,5 +18,5 @@ import io.github.resilience4j.retry.annotation.Retry;
 @Retry(name = "licenseFeignClient")
 public interface LicenseFeignClient {
     @GetMapping("/v1/license/{organizationId}")
-    ResponseEntity<CollectionModel<License>> getLicenses(@PathVariable("organizationId") UUID organizationId);
+    ResponseEntity<CollectionModel<LicenseDto>> getLicenses(@PathVariable("organizationId") UUID organizationId);
 }

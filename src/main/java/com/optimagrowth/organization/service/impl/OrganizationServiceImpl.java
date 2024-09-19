@@ -4,9 +4,9 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.optimagrowth.organization.model.Organization;
 import com.optimagrowth.organization.repository.OrganizationRepository;
 import com.optimagrowth.organization.service.OrganizationService;
+import com.optimagrowth.orm.model.Organization;
 
 @Service
 class OrganizationServiceImpl implements OrganizationService {

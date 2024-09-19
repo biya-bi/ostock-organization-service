@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.optimagrowth.organization.model.Organization;
+import com.optimagrowth.orm.model.Organization;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 

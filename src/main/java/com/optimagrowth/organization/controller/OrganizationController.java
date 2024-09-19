@@ -19,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.optimagrowth.dto.OrganizationDto;
 import com.optimagrowth.organization.exception.NotFoundException;
-import com.optimagrowth.organization.model.Organization;
 import com.optimagrowth.organization.service.OrganizationService;
 import com.optimagrowth.organization.service.client.LicenseFeignClient;
+import com.optimagrowth.organization.translator.OrganizationTranslator;
+import com.optimagrowth.orm.model.Organization;
 import com.optimagrowth.service.MessageService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -39,56 +41,59 @@ class OrganizationController {
     private static final String ORGANIZATION_NOT_FOUND = "organization.not.found";
 
     private final OrganizationService organizationService;
-    private final LicenseFeignClient licenseFeignClient;
+
     private final MessageService messageService;
 
-    OrganizationController(OrganizationService organizationService, LicenseFeignClient licenseFeignClient,
-            MessageService messageService) {
+    private OrganizationController organizationControllerMethodOn = methodOn(OrganizationController.class);
+    private LicenseFeignClient licenseFeignClientMethodOn = methodOn(LicenseFeignClient.class);
+
+    OrganizationController(OrganizationService organizationService, MessageService messageService) {
         this.organizationService = organizationService;
-        this.licenseFeignClient = licenseFeignClient;
         this.messageService = messageService;
     }
 
     @PostMapping
-    ResponseEntity<Organization> create(@RequestBody Organization organization) {
-        Objects.requireNonNull(organization, messageService.getMessage(ORGANIZATION_CANNOT_BE_NULL));
+    ResponseEntity<OrganizationDto> create(@RequestBody OrganizationDto dto) {
+        Objects.requireNonNull(dto, messageService.getMessage(ORGANIZATION_CANNOT_BE_NULL));
 
-        var newOrganization = organizationService.create(organization);
+        var organization = OrganizationTranslator.translate(dto);
+        var createdOrganization = organizationService.create(organization);
 
-        log.info(messageService.getMessage(ORGANIZATION_CREATE_MESSAGE, newOrganization));
+        log.info(messageService.getMessage(ORGANIZATION_CREATE_MESSAGE, createdOrganization));
 
-        return ResponseEntity.ok(addLinks(newOrganization));
+        return ResponseEntity.ok(toDto(createdOrganization));
     }
 
     @GetMapping("/{organizationId}")
-    ResponseEntity<Organization> readById(@PathVariable("organizationId") UUID organizationId) {
+    ResponseEntity<OrganizationDto> readById(@PathVariable("organizationId") UUID organizationId) {
         var organization = organizationService.readById(organizationId);
 
         if (organization == null) {
             throw new NotFoundException(messageService.getMessage(ORGANIZATION_NOT_FOUND, organizationId));
         }
 
-        return ResponseEntity.ok(addLinks(organization));
+        return ResponseEntity.ok(toDto(organization));
     }
 
     @GetMapping
-    ResponseEntity<CollectionModel<Organization>> read() {
-        var organizations = StreamSupport.stream(organizationService.readAll().spliterator(), false).map(this::addLinks)
+    ResponseEntity<CollectionModel<OrganizationDto>> read() {
+        var organizations = StreamSupport.stream(organizationService.readAll().spliterator(), false).map(this::toDto)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(CollectionModel.of(organizations));
     }
 
     @PutMapping("/{organizationId}")
-    ResponseEntity<Organization> update(@PathVariable("organizationId") UUID organizationId,
-            @RequestBody Organization organization) {
-        Objects.requireNonNull(organization, messageService.getMessage(ORGANIZATION_CANNOT_BE_NULL));
+    ResponseEntity<OrganizationDto> update(@PathVariable("organizationId") UUID organizationId,
+            @RequestBody OrganizationDto dto) {
+        Objects.requireNonNull(dto, messageService.getMessage(ORGANIZATION_CANNOT_BE_NULL));
 
+        var organization = OrganizationTranslator.translate(dto, organizationId);
         var updatedOrganization = organizationService.update(organization);
 
         log.info(messageService.getMessage(ORGANIZATION_UPDATE_MESSAGE, updatedOrganization));
 
-        return ResponseEntity.ok(addLinks(updatedOrganization));
+        return ResponseEntity.ok(toDto(updatedOrganization));
     }
 
     @DeleteMapping("/{organizationId}")
@@ -106,14 +111,15 @@ class OrganizationController {
         return ResponseEntity.ok(null);
     }
 
-    private Organization addLinks(Organization organization) {
-        var organizationController = methodOn(OrganizationController.class);
-        var licenseFeignClient = methodOn(LicenseFeignClient.class);
+    private OrganizationDto toDto(Organization organization) {
         var organizationId = organization.getId();
-        return organization.add(linkTo(organizationController.readById(organizationId)).withSelfRel(),
-                linkTo(organizationController.update(organizationId, organization)).withRel("update"),
-                linkTo(organizationController.delete(organizationId)).withRel("delete"),
-                linkTo(licenseFeignClient.getLicenses(organizationId)).withRel("licenses"));
+
+        var dto = OrganizationTranslator.translate(organization);
+
+        return dto.add(linkTo(organizationControllerMethodOn.readById(organizationId)).withSelfRel(),
+                linkTo(organizationControllerMethodOn.update(organizationId, dto)).withRel("update"),
+                linkTo(organizationControllerMethodOn.delete(organizationId)).withRel("delete"),
+                linkTo(licenseFeignClientMethodOn.getLicenses(organizationId)).withRel("licenses"));
     }
 
 }
