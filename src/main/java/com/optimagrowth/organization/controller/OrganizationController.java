@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.optimagrowth.dto.OrganizationDto;
+import com.optimagrowth.organization.criteria.SearchCriteria;
 import com.optimagrowth.organization.exception.NotFoundException;
 import com.optimagrowth.organization.service.OrganizationService;
 import com.optimagrowth.organization.service.client.LicenseFeignClient;
@@ -75,9 +76,9 @@ class OrganizationController {
         return ResponseEntity.ok(toDto(organization));
     }
 
-    @GetMapping
-    ResponseEntity<CollectionModel<OrganizationDto>> read() {
-        var organizations = StreamSupport.stream(organizationService.readAll().spliterator(), false).map(this::toDto)
+    @PostMapping("/search")
+    ResponseEntity<CollectionModel<OrganizationDto>> read(@RequestBody SearchCriteria criteria) {
+        var organizations = StreamSupport.stream(organizationService.read(criteria).spliterator(), false).map(this::toDto)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(CollectionModel.of(organizations));

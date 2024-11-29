@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.optimagrowth.organization.criteria.SearchCriteria;
 import com.optimagrowth.organization.repository.OrganizationRepository;
 import com.optimagrowth.organization.service.OrganizationService;
 import com.optimagrowth.orm.model.Organization;
@@ -32,6 +33,11 @@ class OrganizationServiceImpl implements OrganizationService {
     @Override
     public Iterable<Organization> readAll() {
         return organizationRepository.findAll();
+    }
+
+    @Override
+    public Iterable<Organization> read(SearchCriteria criteria) {
+        return organizationRepository.findByName(criteria.name());
     }
 
     @Override

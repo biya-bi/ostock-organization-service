@@ -12,4 +12,5 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 @Repository
 @CircuitBreaker(name = "organizationRepository")
 public interface OrganizationRepository extends CrudRepository<Organization, UUID> {
+    Iterable<Organization> findByName(String name);
 }
