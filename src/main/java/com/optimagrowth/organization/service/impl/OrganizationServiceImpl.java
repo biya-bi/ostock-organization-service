@@ -37,7 +37,7 @@ class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Iterable<Organization> read(SearchCriteria criteria) {
-        return organizationRepository.findByName(criteria.name());
+        return organizationRepository.find(criteria);
     }
 
     @Override
