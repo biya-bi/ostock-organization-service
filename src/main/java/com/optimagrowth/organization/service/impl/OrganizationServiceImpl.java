@@ -2,6 +2,7 @@ package com.optimagrowth.organization.service.impl;
 
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public Iterable<Organization> read(SearchCriteria criteria, Integer pageNumber, Integer pageSize) {
+    public Page<Organization> read(SearchCriteria criteria, Integer pageNumber, Integer pageSize) {
         Pageable pageable = getPageable(pageNumber, pageSize);
         return organizationRepository.find(criteria, pageable);
     }

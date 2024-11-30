@@ -6,9 +6,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import org.springframework.hateoas.CollectionModel;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.optimagrowth.dto.OrganizationDto;
+import com.optimagrowth.dto.PageDto;
 import com.optimagrowth.organization.criteria.SearchCriteria;
 import com.optimagrowth.organization.exception.NotFoundException;
 import com.optimagrowth.organization.service.OrganizationService;
@@ -78,14 +78,16 @@ class OrganizationController {
     }
 
     @PostMapping("/search")
-    ResponseEntity<CollectionModel<OrganizationDto>> read(@RequestBody SearchCriteria criteria,
+    ResponseEntity<PageDto<OrganizationDto>> read(@RequestBody SearchCriteria criteria,
             @RequestParam("pageNumber") Integer pageNumber, @RequestParam("pageSize") Integer pageSize) {
-        var organizations = StreamSupport
-                .stream(organizationService.read(criteria, pageNumber, pageSize).spliterator(), false)
-                .map(this::toDto)
-                .collect(Collectors.toList());
+        Page<Organization> page = organizationService.read(criteria, pageNumber, pageSize);
 
-        return ResponseEntity.ok(CollectionModel.of(organizations));
+        var organizations = page.getContent().stream().map(this::toDto).collect(Collectors.toList());
+
+        PageDto<OrganizationDto> pageDto = new PageDto<>(organizations, page.getNumber(), page.getSize(),
+                page.getTotalPages());
+
+        return ResponseEntity.ok(pageDto);
     }
 
     @PutMapping("/{organizationId}")
