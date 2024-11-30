@@ -79,7 +79,8 @@ class OrganizationController {
 
     @PostMapping("/search")
     ResponseEntity<PageDto<OrganizationDto>> read(@RequestBody SearchCriteria criteria,
-            @RequestParam("pageNumber") Integer pageNumber, @RequestParam("pageSize") Integer pageSize) {
+            @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         Page<Organization> page = organizationService.read(criteria, pageNumber, pageSize);
 
         var organizations = page.getContent().stream().map(this::toDto).collect(Collectors.toList());
