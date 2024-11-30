@@ -1,6 +1,7 @@
 package com.optimagrowth.organization.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import com.optimagrowth.organization.criteria.SearchCriteria;
 import com.optimagrowth.orm.model.Organization;
@@ -242,6 +245,34 @@ class OrganizationRepositoryTest {
         Iterable<Organization> result = organizationRepository.find(criteria);
 
         assertEquals(0, getCount(result));
+    }
+
+    @Test
+    void find_PageNumberIs0AndPageSizeIs1_ReturnOrganization() {
+        SearchCriteria criteria = new SearchCriteria(null, null, null, null);
+
+        Page<Organization> page = organizationRepository.find(criteria, PageRequest.of(0, 1));
+
+        Organization organization1 = page.getContent().stream()
+                .filter(organization -> organization.getId().equals(unitedNations.getId())).findFirst().orElse(null);
+
+        assertNotNull(organization1);
+        assertEquals(0, page.getNumber());
+        assertEquals(organizations.size(), page.getTotalPages());
+    }
+
+    @Test
+    void find_PageNumberIs1AndPageSizeIs1_ReturnOrganization() {
+        SearchCriteria criteria = new SearchCriteria(null, null, null, null);
+
+        Page<Organization> page = organizationRepository.find(criteria, PageRequest.of(1, 1));
+
+        Organization organization1 = page.getContent().stream()
+                .filter(organization -> organization.getId().equals(nasa.getId())).findFirst().orElse(null);
+
+        assertNotNull(organization1);
+        assertEquals(1, page.getNumber());
+        assertEquals(organizations.size(), page.getTotalPages());
     }
 
     private Organization constructOrganization(UUID id, String organizationName, String contactName,
