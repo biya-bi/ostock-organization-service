@@ -12,7 +12,7 @@ public interface OrganizationService {
 
     Iterable<Organization> readAll();
 
-    Iterable<Organization> read(SearchCriteria criteria);
+    Iterable<Organization> read(SearchCriteria criteria, Integer pageNumber, Integer pageSize);
 
     Organization update(Organization organization);
 

@@ -2,6 +2,8 @@ package com.optimagrowth.organization.service.impl;
 
 import java.util.UUID;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.optimagrowth.organization.criteria.SearchCriteria;
@@ -13,6 +15,8 @@ import com.optimagrowth.orm.model.Organization;
 class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;
+
+    private static final int DEFAULT_PAGE_SIZE = 20;
 
     OrganizationServiceImpl(OrganizationRepository organizationRepository) {
         this.organizationRepository = organizationRepository;
@@ -36,8 +40,9 @@ class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public Iterable<Organization> read(SearchCriteria criteria) {
-        return organizationRepository.find(criteria);
+    public Iterable<Organization> read(SearchCriteria criteria, Integer pageNumber, Integer pageSize) {
+        Pageable pageable = getPageable(pageNumber, pageSize);
+        return organizationRepository.find(criteria, pageable);
     }
 
     @Override
@@ -48,6 +53,16 @@ class OrganizationServiceImpl implements OrganizationService {
     @Override
     public void delete(Organization organization) {
         organizationRepository.deleteById(organization.getId());
+    }
+
+    private Pageable getPageable(Integer pageNumber, Integer pageSize) {
+        if (pageNumber == null || pageNumber < 0) {
+            pageNumber = 0;
+        }
+        if (pageSize == null || pageSize < 0) {
+            pageSize = DEFAULT_PAGE_SIZE;
+        }
+        return PageRequest.of(pageNumber, pageSize);
     }
 
 }

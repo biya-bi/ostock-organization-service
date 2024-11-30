@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.optimagrowth.dto.OrganizationDto;
@@ -77,8 +78,11 @@ class OrganizationController {
     }
 
     @PostMapping("/search")
-    ResponseEntity<CollectionModel<OrganizationDto>> read(@RequestBody SearchCriteria criteria) {
-        var organizations = StreamSupport.stream(organizationService.read(criteria).spliterator(), false).map(this::toDto)
+    ResponseEntity<CollectionModel<OrganizationDto>> read(@RequestBody SearchCriteria criteria,
+            @RequestParam("pageNumber") Integer pageNumber, @RequestParam("pageSize") Integer pageSize) {
+        var organizations = StreamSupport
+                .stream(organizationService.read(criteria, pageNumber, pageSize).spliterator(), false)
+                .map(this::toDto)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(CollectionModel.of(organizations));
