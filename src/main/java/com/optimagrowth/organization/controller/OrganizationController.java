@@ -84,7 +84,8 @@ class OrganizationController {
 
         var organizations = page.getContent().stream().map(this::toDto).collect(Collectors.toList());
 
-        var pageDto = new PageDto<>(organizations, page.getNumber(), page.getSize(), page.getTotalPages());
+        var pageDto = new PageDto<>(organizations, page.getNumber(), page.getSize(), page.getTotalPages(),
+                page.getNumberOfElements(), page.getTotalElements());
 
         return ResponseEntity.ok(pageDto);
     }
