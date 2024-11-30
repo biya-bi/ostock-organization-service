@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -81,12 +80,11 @@ class OrganizationController {
     ResponseEntity<PageDto<OrganizationDto>> read(@RequestBody SearchCriteria criteria,
             @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", required = false) Integer pageSize) {
-        Page<Organization> page = organizationService.read(criteria, pageNumber, pageSize);
+        var page = organizationService.read(criteria, pageNumber, pageSize);
 
         var organizations = page.getContent().stream().map(this::toDto).collect(Collectors.toList());
 
-        PageDto<OrganizationDto> pageDto = new PageDto<>(organizations, page.getNumber(), page.getSize(),
-                page.getTotalPages());
+        var pageDto = new PageDto<>(organizations, page.getNumber(), page.getSize(), page.getTotalPages());
 
         return ResponseEntity.ok(pageDto);
     }
