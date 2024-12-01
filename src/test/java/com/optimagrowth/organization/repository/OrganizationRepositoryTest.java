@@ -53,7 +53,7 @@ class OrganizationRepositoryTest {
     void find_ExactNameIsGiven_ReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(unitedNations.getName(), null, null, null);
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         // Verify that the total number of organizations returned is 1
         assertEquals(1, getCount(result));
@@ -65,7 +65,7 @@ class OrganizationRepositoryTest {
     void find_LowercaseNameIsGiven_ReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(unitedNations.getName().toLowerCase(), null, null, null);
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         // Verify that the total number of organizations returned is 1
         assertEquals(1, getCount(result));
@@ -77,7 +77,7 @@ class OrganizationRepositoryTest {
     void find_FirstThreeNameCharactersAreGiven_ReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(unitedNations.getName().substring(0, 3), null, null, null);
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         // Verify that the total number of organizations returned is 1
         assertEquals(1, getCount(result));
@@ -89,7 +89,7 @@ class OrganizationRepositoryTest {
     void find_NoCriterionIsGiven_ReturnOrganizations() {
         SearchCriteria criteria = new SearchCriteria(null, null, null, null);
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         assertEquals(organizations.size(), getCount(result));
     }
@@ -98,7 +98,7 @@ class OrganizationRepositoryTest {
     void find_NoneExistentNameIsGiven_NoReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(nonExistent, null, null, null);
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         assertEquals(0, getCount(result));
     }
@@ -107,7 +107,7 @@ class OrganizationRepositoryTest {
     void find_ExactContactNameIsGiven_ReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(null, unitedNations.getContactName(), null, null);
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         // Verify that the total number of organizations returned is 1
         assertEquals(1, getCount(result));
@@ -119,7 +119,7 @@ class OrganizationRepositoryTest {
     void find_LowercaseContactNameIsGiven_ReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(null, unitedNations.getContactName().toLowerCase(), null, null);
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         // Verify that the total number of organizations returned is 1
         assertEquals(1, getCount(result));
@@ -131,7 +131,7 @@ class OrganizationRepositoryTest {
     void find_FirstThreeContactNameCharactersAreGiven_ReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(null, unitedNations.getContactName().substring(0, 3), null, null);
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         // Verify that the total number of organizations returned is 1
         assertEquals(1, getCount(result));
@@ -143,7 +143,7 @@ class OrganizationRepositoryTest {
     void find_NoneExistentContactNameIsGiven_NoReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(null, nonExistent, null, null);
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         assertEquals(0, getCount(result));
     }
@@ -152,7 +152,7 @@ class OrganizationRepositoryTest {
     void find_ExactContactEmailIsGiven_ReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(null, null, unitedNations.getContactEmail(), null);
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         // Verify that the total number of organizations returned is 1
         assertEquals(1, getCount(result));
@@ -164,7 +164,7 @@ class OrganizationRepositoryTest {
     void find_LowercaseContactEmailIsGiven_ReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(null, null, unitedNations.getContactEmail().toLowerCase(), null);
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         // Verify that the total number of organizations returned is 1
         assertEquals(1, getCount(result));
@@ -176,7 +176,7 @@ class OrganizationRepositoryTest {
     void find_FirstThreeContactEmailCharactersAreGiven_ReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(null, null, unitedNations.getContactEmail().substring(0, 3), null);
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         // Verify that the total number of organizations returned is 1
         assertEquals(1, getCount(result));
@@ -188,7 +188,7 @@ class OrganizationRepositoryTest {
     void find_NoneExistentContactEmailIsGiven_NoReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(null, null, nonExistent, null);
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         assertEquals(0, getCount(result));
     }
@@ -197,7 +197,7 @@ class OrganizationRepositoryTest {
     void find_ExactContactPhoneIsGiven_ReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(null, null, null, unitedNations.getContactPhone());
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         // Verify that the total number of organizations returned is 1
         assertEquals(1, getCount(result));
@@ -209,7 +209,7 @@ class OrganizationRepositoryTest {
     void find_LowercaseContactPhoneIsGiven_ReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(null, null, null, unitedNations.getContactPhone().toLowerCase());
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         // Verify that the total number of organizations returned is 1
         assertEquals(1, getCount(result));
@@ -221,7 +221,7 @@ class OrganizationRepositoryTest {
     void find_FirstFourContactPhoneCharactersAreGiven_ReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(null, null, null, unitedNations.getContactPhone().substring(0, 4));
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         // Verify that the total number of organizations returned is 1
         assertEquals(1, getCount(result));
@@ -233,7 +233,7 @@ class OrganizationRepositoryTest {
     void find_NoneExistentContactPhoneIsGiven_NoReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(null, null, null, nonExistent);
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         assertEquals(0, getCount(result));
     }
@@ -242,7 +242,7 @@ class OrganizationRepositoryTest {
     void find_NameExistsButContactDoesNot_NoReturnOrganization() {
         SearchCriteria criteria = new SearchCriteria(unitedNations.getName(), nonExistent, null, null);
 
-        Iterable<Organization> result = organizationRepository.find(criteria);
+        Iterable<Organization> result = organizationRepository.find(criteria, null);
 
         assertEquals(0, getCount(result));
     }

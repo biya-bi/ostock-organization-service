@@ -12,8 +12,6 @@ public interface OrganizationService {
 
     Organization readById(UUID organizationId);
 
-    Iterable<Organization> readAll();
-
     Page<Organization> read(SearchCriteria criteria, Integer pageNumber, Integer pageSize);
 
     Organization update(Organization organization);

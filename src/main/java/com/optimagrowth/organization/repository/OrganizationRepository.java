@@ -17,14 +17,7 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 @Repository
 @CircuitBreaker(name = "organizationRepository")
 public interface OrganizationRepository extends CrudRepository<Organization, UUID> {
-    @Query("select o from Organization o where "
-            + "((:#{#criteria.name} is null) or (upper(o.name) like concat('%',upper(:#{#criteria.name}),'%'))) and "
-            + "((:#{#criteria.contactName} is null) or (upper(o.contactName) like concat('%',upper(:#{#criteria.contactName}),'%'))) and "
-            + "((:#{#criteria.contactEmail} is null) or (upper(o.contactEmail) like concat('%',upper(:#{#criteria.contactEmail}),'%'))) and "
-            + "((:#{#criteria.contactPhone} is null) or (upper(o.contactPhone) like concat('%',upper(:#{#criteria.contactPhone}),'%')))")
-    Iterable<Organization> find(@Param("criteria") SearchCriteria criteria);
-
-    @Query(value = "select o from Organization o where "
+     @Query(value = "select o from Organization o where "
             + "((:#{#criteria.name} is null) or (upper(o.name) like concat('%',upper(:#{#criteria.name}),'%'))) and "
             + "((:#{#criteria.contactName} is null) or (upper(o.contactName) like concat('%',upper(:#{#criteria.contactName}),'%'))) and "
             + "((:#{#criteria.contactEmail} is null) or (upper(o.contactEmail) like concat('%',upper(:#{#criteria.contactEmail}),'%'))) and "

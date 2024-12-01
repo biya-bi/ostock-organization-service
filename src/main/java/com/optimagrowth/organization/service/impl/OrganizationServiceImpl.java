@@ -36,11 +36,6 @@ class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public Iterable<Organization> readAll() {
-        return organizationRepository.findAll();
-    }
-
-    @Override
     public Page<Organization> read(SearchCriteria criteria, Integer pageNumber, Integer pageSize) {
         Pageable pageable = getPageable(pageNumber, pageSize);
         return organizationRepository.find(criteria, pageable);
