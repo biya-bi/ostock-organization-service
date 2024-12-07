@@ -99,7 +99,7 @@ class OrganizationRepositoryTest {
 	}
 
 	@Test
-	void find_NonExistentNameIsGiven_NoReturnOrganization() {
+	void find_NonExistentNameIsGiven_ReturnNoOrganization() {
 		var criteria = new SearchCriteria(nonExistent, null, null, null);
 
 		var page = organizationRepository.find(criteria, null);
@@ -144,7 +144,7 @@ class OrganizationRepositoryTest {
 	}
 
 	@Test
-	void find_NonExistentContactNameIsGiven_NoReturnOrganization() {
+	void find_NonExistentContactNameIsGiven_ReturnNoOrganization() {
 		var criteria = new SearchCriteria(null, nonExistent, null, null);
 
 		var page = organizationRepository.find(criteria, null);
@@ -189,7 +189,7 @@ class OrganizationRepositoryTest {
 	}
 
 	@Test
-	void find_NonExistentContactEmailIsGiven_NoReturnOrganization() {
+	void find_NonExistentContactEmailIsGiven_ReturnNoOrganization() {
 		var criteria = new SearchCriteria(null, null, nonExistent, null);
 
 		var page = organizationRepository.find(criteria, null);
@@ -234,7 +234,7 @@ class OrganizationRepositoryTest {
 	}
 
 	@Test
-	void find_NonExistentContactPhoneIsGiven_NoReturnOrganization() {
+	void find_NonExistentContactPhoneIsGiven_ReturnNoOrganization() {
 		var criteria = new SearchCriteria(null, null, null, nonExistent);
 
 		var page = organizationRepository.find(criteria, null);
@@ -243,7 +243,7 @@ class OrganizationRepositoryTest {
 	}
 
 	@Test
-	void find_NameExistsButContactDoesNot_NoReturnOrganization() {
+	void find_NameExistsButContactDoesNot_ReturnNoOrganization() {
 		var criteria = new SearchCriteria(unitedNations.getName(), nonExistent, null, null);
 
 		var page = organizationRepository.find(criteria, null);
