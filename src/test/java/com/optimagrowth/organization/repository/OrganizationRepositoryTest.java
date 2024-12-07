@@ -20,273 +20,278 @@ import org.springframework.data.domain.PageRequest;
 import com.optimagrowth.organization.criteria.SearchCriteria;
 import com.optimagrowth.orm.model.Organization;
 
+import jakarta.persistence.EntityManager;
+
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = OrganizationRepository.class))
 class OrganizationRepositoryTest {
 
-    @Autowired
-    private OrganizationRepository organizationRepository;
+	@Autowired
+	private OrganizationRepository organizationRepository;
 
-    private final Organization unitedNations = constructOrganization(UUID.randomUUID(), "United Nations",
-            "USG Mr. Li Junhua", "population@un.org",
-            "+1-212-963-3209");
+	@Autowired
+	private EntityManager entityManager;
 
-    private final Organization nasa = constructOrganization(UUID.randomUUID(), "NASA",
-            "Kelly Garcia", "kelly.l.garcia@nasa.gov",
-            "+1-650-604-3273");
+	private final Organization unitedNations = constructOrganization(UUID.randomUUID(), "United Nations",
+			"USG Mr. Li Junhua", "population@un.org",
+			"+1-212-963-3209");
 
-    private final List<Organization> organizations = Arrays.asList(unitedNations, nasa);
+	private final Organization nasa = constructOrganization(UUID.randomUUID(), "NASA",
+			"Kelly Garcia", "kelly.l.garcia@nasa.gov",
+			"+1-650-604-3273");
 
-    private final String nonExistent = "nonExistent";
+	private final List<Organization> organizations = Arrays.asList(unitedNations, nasa);
 
-    @BeforeEach
-    void setUp() {
-        organizationRepository.saveAll(organizations);
-    }
+	private final String nonExistent = "nonExistent";
 
-    @AfterEach
-    void cleanUp() {
-        organizations.forEach(organization -> organizationRepository.deleteById(organization.getId()));
-    }
+	@BeforeEach
+	void setUp() {
+		organizations.forEach(entityManager::persist);
+	}
 
-    @Test
-    void find_ExactNameIsGiven_ReturnOrganization() {
-        var criteria = new SearchCriteria(unitedNations.getName(), null, null, null);
+	@AfterEach
+	void cleanUp() {
+		organizations.forEach(entityManager::remove);
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_ExactNameIsGiven_ReturnOrganization() {
+		var criteria = new SearchCriteria(unitedNations.getName(), null, null, null);
 
-        // Verify that the total number of organizations returned is 1
-        assertEquals(1, page.getTotalElements());
-        // Verify that the returned organization is right one
-        assertTrue(exists(page.getContent(), unitedNations.getId()));
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_LowercaseNameIsGiven_ReturnOrganization() {
-        var criteria = new SearchCriteria(unitedNations.getName().toLowerCase(), null, null, null);
+		// Verify that the total number of organizations returned is 1
+		assertEquals(1, page.getTotalElements());
+		// Verify that the returned organization is right one
+		assertTrue(exists(page.getContent(), unitedNations.getId()));
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_LowercaseNameIsGiven_ReturnOrganization() {
+		var criteria = new SearchCriteria(unitedNations.getName().toLowerCase(), null, null, null);
 
-        // Verify that the total number of organizations returned is 1
-        assertEquals(1, page.getTotalElements());
-        // Verify that the returned organization is right one
-        assertTrue(exists(page.getContent(), unitedNations.getId()));
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_FirstThreeNameCharactersAreGiven_ReturnOrganization() {
-        var criteria = new SearchCriteria(unitedNations.getName().substring(0, 3), null, null, null);
+		// Verify that the total number of organizations returned is 1
+		assertEquals(1, page.getTotalElements());
+		// Verify that the returned organization is right one
+		assertTrue(exists(page.getContent(), unitedNations.getId()));
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_FirstThreeNameCharactersAreGiven_ReturnOrganization() {
+		var criteria = new SearchCriteria(unitedNations.getName().substring(0, 3), null, null, null);
 
-        // Verify that the total number of organizations returned is 1
-        assertEquals(1, page.getTotalElements());
-        // Verify that the returned organization is right one
-        assertTrue(exists(page.getContent(), unitedNations.getId()));
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_NoCriterionIsGiven_ReturnOrganizations() {
-        var criteria = new SearchCriteria(null, null, null, null);
+		// Verify that the total number of organizations returned is 1
+		assertEquals(1, page.getTotalElements());
+		// Verify that the returned organization is right one
+		assertTrue(exists(page.getContent(), unitedNations.getId()));
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_NoCriterionIsGiven_ReturnOrganizations() {
+		var criteria = new SearchCriteria(null, null, null, null);
 
-        assertEquals(organizations.size(), page.getTotalElements());
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_NoneExistentNameIsGiven_NoReturnOrganization() {
-        var criteria = new SearchCriteria(nonExistent, null, null, null);
+		assertEquals(organizations.size(), page.getTotalElements());
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_NonExistentNameIsGiven_NoReturnOrganization() {
+		var criteria = new SearchCriteria(nonExistent, null, null, null);
 
-        assertEquals(0, page.getTotalElements());
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_ExactContactNameIsGiven_ReturnOrganization() {
-        var criteria = new SearchCriteria(null, unitedNations.getContactName(), null, null);
+		assertTrue(page.isEmpty());
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_ExactContactNameIsGiven_ReturnOrganization() {
+		var criteria = new SearchCriteria(null, unitedNations.getContactName(), null, null);
 
-        // Verify that the total number of organizations returned is 1
-        assertEquals(1, page.getTotalElements());
-        // Verify that the returned organization is right one
-        assertTrue(exists(page.getContent(), unitedNations.getId()));
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_LowercaseContactNameIsGiven_ReturnOrganization() {
-        var criteria = new SearchCriteria(null, unitedNations.getContactName().toLowerCase(), null, null);
+		// Verify that the total number of organizations returned is 1
+		assertEquals(1, page.getTotalElements());
+		// Verify that the returned organization is right one
+		assertTrue(exists(page.getContent(), unitedNations.getId()));
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_LowercaseContactNameIsGiven_ReturnOrganization() {
+		var criteria = new SearchCriteria(null, unitedNations.getContactName().toLowerCase(), null, null);
 
-        // Verify that the total number of organizations returned is 1
-        assertEquals(1, page.getTotalElements());
-        // Verify that the returned organization is right one
-        assertTrue(exists(page.getContent(), unitedNations.getId()));
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_FirstThreeContactNameCharactersAreGiven_ReturnOrganization() {
-        var criteria = new SearchCriteria(null, unitedNations.getContactName().substring(0, 3), null, null);
+		// Verify that the total number of organizations returned is 1
+		assertEquals(1, page.getTotalElements());
+		// Verify that the returned organization is right one
+		assertTrue(exists(page.getContent(), unitedNations.getId()));
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_FirstThreeContactNameCharactersAreGiven_ReturnOrganization() {
+		var criteria = new SearchCriteria(null, unitedNations.getContactName().substring(0, 3), null, null);
 
-        // Verify that the total number of organizations returned is 1
-        assertEquals(1, page.getTotalElements());
-        // Verify that the returned organization is right one
-        assertTrue(exists(page.getContent(), unitedNations.getId()));
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_NoneExistentContactNameIsGiven_NoReturnOrganization() {
-        var criteria = new SearchCriteria(null, nonExistent, null, null);
+		// Verify that the total number of organizations returned is 1
+		assertEquals(1, page.getTotalElements());
+		// Verify that the returned organization is right one
+		assertTrue(exists(page.getContent(), unitedNations.getId()));
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_NonExistentContactNameIsGiven_NoReturnOrganization() {
+		var criteria = new SearchCriteria(null, nonExistent, null, null);
 
-        assertEquals(0, page.getTotalElements());
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_ExactContactEmailIsGiven_ReturnOrganization() {
-        var criteria = new SearchCriteria(null, null, unitedNations.getContactEmail(), null);
+		assertTrue(page.isEmpty());
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_ExactContactEmailIsGiven_ReturnOrganization() {
+		var criteria = new SearchCriteria(null, null, unitedNations.getContactEmail(), null);
 
-        // Verify that the total number of organizations returned is 1
-        assertEquals(1, page.getTotalElements());
-        // Verify that the returned organization is right one
-        assertTrue(exists(page.getContent(), unitedNations.getId()));
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_LowercaseContactEmailIsGiven_ReturnOrganization() {
-        var criteria = new SearchCriteria(null, null, unitedNations.getContactEmail().toLowerCase(), null);
+		// Verify that the total number of organizations returned is 1
+		assertEquals(1, page.getTotalElements());
+		// Verify that the returned organization is right one
+		assertTrue(exists(page.getContent(), unitedNations.getId()));
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_LowercaseContactEmailIsGiven_ReturnOrganization() {
+		var criteria = new SearchCriteria(null, null, unitedNations.getContactEmail().toLowerCase(), null);
 
-        // Verify that the total number of organizations returned is 1
-        assertEquals(1, page.getTotalElements());
-        // Verify that the returned organization is right one
-        assertTrue(exists(page.getContent(), unitedNations.getId()));
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_FirstThreeContactEmailCharactersAreGiven_ReturnOrganization() {
-        var criteria = new SearchCriteria(null, null, unitedNations.getContactEmail().substring(0, 3), null);
+		// Verify that the total number of organizations returned is 1
+		assertEquals(1, page.getTotalElements());
+		// Verify that the returned organization is right one
+		assertTrue(exists(page.getContent(), unitedNations.getId()));
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_FirstThreeContactEmailCharactersAreGiven_ReturnOrganization() {
+		var criteria = new SearchCriteria(null, null, unitedNations.getContactEmail().substring(0, 3), null);
 
-        // Verify that the total number of organizations returned is 1
-        assertEquals(1, page.getTotalElements());
-        // Verify that the returned organization is right one
-        assertTrue(exists(page.getContent(), unitedNations.getId()));
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_NoneExistentContactEmailIsGiven_NoReturnOrganization() {
-        var criteria = new SearchCriteria(null, null, nonExistent, null);
+		// Verify that the total number of organizations returned is 1
+		assertEquals(1, page.getTotalElements());
+		// Verify that the returned organization is right one
+		assertTrue(exists(page.getContent(), unitedNations.getId()));
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_NonExistentContactEmailIsGiven_NoReturnOrganization() {
+		var criteria = new SearchCriteria(null, null, nonExistent, null);
 
-        assertEquals(0, page.getTotalElements());
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_ExactContactPhoneIsGiven_ReturnOrganization() {
-        var criteria = new SearchCriteria(null, null, null, unitedNations.getContactPhone());
+		assertTrue(page.isEmpty());
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_ExactContactPhoneIsGiven_ReturnOrganization() {
+		var criteria = new SearchCriteria(null, null, null, unitedNations.getContactPhone());
 
-        // Verify that the total number of organizations returned is 1
-        assertEquals(1, page.getTotalElements());
-        // Verify that the returned organization is right one
-        assertTrue(exists(page.getContent(), unitedNations.getId()));
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_LowercaseContactPhoneIsGiven_ReturnOrganization() {
-        var criteria = new SearchCriteria(null, null, null, unitedNations.getContactPhone().toLowerCase());
+		// Verify that the total number of organizations returned is 1
+		assertEquals(1, page.getTotalElements());
+		// Verify that the returned organization is right one
+		assertTrue(exists(page.getContent(), unitedNations.getId()));
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_LowercaseContactPhoneIsGiven_ReturnOrganization() {
+		var criteria = new SearchCriteria(null, null, null, unitedNations.getContactPhone().toLowerCase());
 
-        // Verify that the total number of organizations returned is 1
-        assertEquals(1, page.getTotalElements());
-        // Verify that the returned organization is right one
-        assertTrue(exists(page.getContent(), unitedNations.getId()));
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_FirstFourContactPhoneCharactersAreGiven_ReturnOrganization() {
-        var criteria = new SearchCriteria(null, null, null, unitedNations.getContactPhone().substring(0, 4));
+		// Verify that the total number of organizations returned is 1
+		assertEquals(1, page.getTotalElements());
+		// Verify that the returned organization is right one
+		assertTrue(exists(page.getContent(), unitedNations.getId()));
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_FirstFourContactPhoneCharactersAreGiven_ReturnOrganization() {
+		var criteria = new SearchCriteria(null, null, null, unitedNations.getContactPhone().substring(0, 4));
 
-        // Verify that the total number of organizations returned is 1
-        assertEquals(1, page.getTotalElements());
-        // Verify that the returned organization is right one
-        assertTrue(exists(page.getContent(), unitedNations.getId()));
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_NoneExistentContactPhoneIsGiven_NoReturnOrganization() {
-        var criteria = new SearchCriteria(null, null, null, nonExistent);
+		// Verify that the total number of organizations returned is 1
+		assertEquals(1, page.getTotalElements());
+		// Verify that the returned organization is right one
+		assertTrue(exists(page.getContent(), unitedNations.getId()));
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_NonExistentContactPhoneIsGiven_NoReturnOrganization() {
+		var criteria = new SearchCriteria(null, null, null, nonExistent);
 
-        assertTrue(page.isEmpty());
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_NameExistsButContactDoesNot_NoReturnOrganization() {
-        var criteria = new SearchCriteria(unitedNations.getName(), nonExistent, null, null);
+		assertTrue(page.isEmpty());
+	}
 
-        var page = organizationRepository.find(criteria, null);
+	@Test
+	void find_NameExistsButContactDoesNot_NoReturnOrganization() {
+		var criteria = new SearchCriteria(unitedNations.getName(), nonExistent, null, null);
 
-        assertTrue(page.isEmpty());
-    }
+		var page = organizationRepository.find(criteria, null);
 
-    @Test
-    void find_PageNumberIs0AndPageSizeIs1_ReturnOrganization() {
-        var criteria = new SearchCriteria(null, null, null, null);
+		assertTrue(page.isEmpty());
+	}
 
-        var page = organizationRepository.find(criteria, PageRequest.of(0, 1));
+	@Test
+	void find_PageNumberIs0AndPageSizeIs1_ReturnOrganization() {
+		var criteria = new SearchCriteria(null, null, null, null);
 
-        var organization1 = page.getContent().stream()
-                .filter(organization -> organization.getId().equals(unitedNations.getId())).findFirst().orElse(null);
+		var page = organizationRepository.find(criteria, PageRequest.of(0, 1));
 
-        assertNotNull(organization1);
-        assertEquals(0, page.getNumber());
-        assertEquals(organizations.size(), page.getTotalPages());
-    }
+		var organization1 = page.getContent().stream()
+				.filter(organization -> organization.getId().equals(unitedNations.getId())).findFirst().orElse(null);
 
-    @Test
-    void find_PageNumberIs1AndPageSizeIs1_ReturnOrganization() {
-        var criteria = new SearchCriteria(null, null, null, null);
+		assertNotNull(organization1);
+		assertEquals(0, page.getNumber());
+		assertEquals(organizations.size(), page.getTotalPages());
+	}
 
-        var page = organizationRepository.find(criteria, PageRequest.of(1, 1));
+	@Test
+	void find_PageNumberIs1AndPageSizeIs1_ReturnOrganization() {
+		var criteria = new SearchCriteria(null, null, null, null);
 
-        var organization1 = page.getContent().stream()
-                .filter(organization -> organization.getId().equals(nasa.getId())).findFirst().orElse(null);
+		var page = organizationRepository.find(criteria, PageRequest.of(1, 1));
 
-        assertNotNull(organization1);
-        assertEquals(1, page.getNumber());
-        assertEquals(organizations.size(), page.getTotalPages());
-    }
+		var organization1 = page.getContent().stream()
+				.filter(organization -> organization.getId().equals(nasa.getId())).findFirst().orElse(null);
 
-    private Organization constructOrganization(UUID id, String organizationName, String contactName,
-            String contactEmail, String contactPhone) {
-        var organization = new Organization();
-        organization.setId(id);
-        organization.setName(organizationName);
-        organization.setContactName(contactName);
-        organization.setContactEmail(contactEmail);
-        organization.setContactPhone(contactPhone);
-        return organization;
-    }
+		assertNotNull(organization1);
+		assertEquals(1, page.getNumber());
+		assertEquals(organizations.size(), page.getTotalPages());
+	}
 
-    private boolean exists(List<Organization> organizations, UUID id) {
-        return organizations.stream().anyMatch(org -> org.getId().equals(id));
-    }
+	private Organization constructOrganization(UUID id, String organizationName, String contactName,
+			String contactEmail, String contactPhone) {
+		var organization = new Organization();
+		organization.setId(id);
+		organization.setName(organizationName);
+		organization.setContactName(contactName);
+		organization.setContactEmail(contactEmail);
+		organization.setContactPhone(contactPhone);
+		return organization;
+	}
+
+	private boolean exists(List<Organization> organizations, UUID id) {
+		return organizations.stream().anyMatch(org -> org.getId().equals(id));
+	}
 
 }
