@@ -125,7 +125,8 @@ class OrganizationController {
         return dto.add(linkTo(organizationControllerMethodOn.readById(organizationId)).withSelfRel(),
                 linkTo(organizationControllerMethodOn.update(organizationId, dto)).withRel("update"),
                 linkTo(organizationControllerMethodOn.delete(organizationId)).withRel("delete"),
-                linkTo(licenseFeignClientMethodOn.getLicenses(organizationId)).withRel("licenses"));
+                linkTo(licenseFeignClientMethodOn.getLicenses(organizationId)).withRel("licenses"),
+                linkTo(licenseFeignClientMethodOn.create(organizationId, null)).withRel("addLicense"));
     }
 
 }
