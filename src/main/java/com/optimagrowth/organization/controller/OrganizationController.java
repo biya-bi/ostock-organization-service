@@ -6,6 +6,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.nguiland.context.service.MessageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,6 @@ import com.optimagrowth.organization.service.OrganizationService;
 import com.optimagrowth.organization.service.client.LicenseFeignClient;
 import com.optimagrowth.organization.translator.OrganizationTranslator;
 import com.optimagrowth.orm.model.Organization;
-import com.optimagrowth.service.MessageService;
 
 import lombok.extern.slf4j.Slf4j;
 
