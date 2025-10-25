@@ -6,4 +6,4 @@ WORKDIR /opt/ostock
 
 COPY target/*.jar ./organization-service.jar
 
-ENTRYPOINT java -jar ./organization-service.jar
+ENTRYPOINT ["java", "-jar", "./organization-service.jar"]
