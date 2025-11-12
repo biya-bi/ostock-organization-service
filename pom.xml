@@ -79,6 +79,11 @@
 			<artifactId>gson</artifactId>
 		</dependency>
 
+    <dependency>
+      <groupId>org.glassfish.jersey.core</groupId>
+      <artifactId>jersey-common</artifactId>
+    </dependency>
+
 		<dependency>
 			<groupId>org.nguiland.io</groupId>
 			<artifactId>nguiland-io-utils</artifactId>
@@ -87,10 +92,10 @@
 			<groupId>org.nguiland.security</groupId>
 			<artifactId>nguiland-web-oauth2</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.nguiland.context</groupId>
-			<artifactId>nguiland-context</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>org.nguiland.rest</groupId>
+      <artifactId>nguiland-rest</artifactId>
+    </dependency>
 
 		<dependency>
 			<groupId>com.optimagrowth</groupId>

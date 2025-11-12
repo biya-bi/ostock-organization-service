@@ -6,7 +6,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.nguiland.context.service.MessageService;
+import org.nguiland.rest.service.MessageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.optimagrowth.dto.OrganizationDto;
 import com.optimagrowth.dto.PageDto;
 import com.optimagrowth.organization.criteria.SearchCriteria;
-import com.optimagrowth.organization.exception.NotFoundException;
 import com.optimagrowth.organization.service.OrganizationService;
 import com.optimagrowth.organization.service.client.LicenseFeignClient;
 import com.optimagrowth.organization.translator.OrganizationTranslator;
 import com.optimagrowth.orm.model.Organization;
 
+import jakarta.ws.rs.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
