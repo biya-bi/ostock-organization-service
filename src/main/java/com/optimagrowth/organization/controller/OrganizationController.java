@@ -6,6 +6,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.nguiland.rest.exception.NotFoundException;
 import org.nguiland.rest.service.MessageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,7 +27,6 @@ import com.optimagrowth.organization.service.client.LicenseFeignClient;
 import com.optimagrowth.organization.translator.OrganizationTranslator;
 import com.optimagrowth.orm.model.Organization;
 
-import jakarta.ws.rs.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
